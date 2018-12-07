@@ -1,0 +1,55 @@
+pragma solidity 0.4.24;
+
+
+
+contract StringComparison {
+
+	string pass;
+    
+	string uname;
+    
+    
+
+function enterUsername (string _uname) public {
+
+        uname = _uname;
+    
+}
+    
+    
+
+function enterPassword (string _pass) public {
+
+        pass = _pass;
+    
+}
+    
+    
+
+function verifyPassword(string pass, string passd) pure private returns(bool){
+
+        if (bytes(pass).length == bytes(passd).length) {
+
+            return keccak256(abi.encodePacked(pass)) == keccak256(abi.encodePacked(passd));
+		} 
+        
+		else 
+		{ 
+            
+		return false;
+        
+		}
+    
+	}
+    
+    
+function getAccountInfo () public view returns (string, string) {
+
+        return (pass, uname);
+
+    }
+    
+    
+
+}
+

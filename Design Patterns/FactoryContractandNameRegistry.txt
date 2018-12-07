@@ -1,0 +1,84 @@
+pragma solidity ^0.4.24;
+
+
+
+contract Car {
+
+
+
+
+	address[] public contracts;
+
+	struct Details{
+      
+	address contractAddress;
+  
+}
+  
+ 
+ 
+mapping(string => Details) registry;
+function getContractCount()
+	public
+ 
+	constant
+ 
+	returns(uint contractCount)
+ {
+
+    	return contracts.length;
+  
+}
+
+  
+
+function newCar(string _name)
+ public
+ returns(address newContract)
+ {
+
+    Details memory info;
+
+    CarDetails c = new CarDetails();
+
+    info.contractAddress = c;
+
+    contracts.push(c);
+
+    registry[_name] = info;
+
+    return c;
+  
+}
+  
+  
+
+function searchCarName(string _name) constant returns(address) {
+
+      return (registry[_name].contractAddress);
+
+	}
+  
+
+}
+
+
+
+contract CarDetails {
+
+  
+
+function getCarDetails()
+
+	public
+
+	constant
+
+	returns (string)
+ {
+    
+	return "car";
+  
+	}    
+
+}

@@ -1,0 +1,84 @@
+pragma solidity ^0.4.24;
+
+
+
+contract Atm {
+	
+	address owner;
+    
+	constructor() payable public {
+
+    	owner = msg.sender;
+
+
+}
+
+    
+
+	enum Stages {Deposits, Withdraws }
+ 
+    		Stages stage = Stages.Deposits;
+ 
+   	 	mapping(address => uint) balances;
+ 
+    		uint creationTime = now;
+
+
+
+    	function deposit() payable public {
+
+        	require(stage == Stages.Deposits && msg.value > 0);
+    
+        	balances[msg.sender] += msg.value;
+ 
+        
+    
+	}
+    
+    
+
+	function withdraw(uint amount) public {
+
+        	if(stage != Stages.Withdraws && now >= creationTime + 15 seconds) {
+
+            	stage = Stages.Withdraws;
+            
+        
+	
+	} 
+   
+        
+        
+	require(stage == Stages.Withdraws && balances[msg.sender] > 0);
+   
+        	balances[msg.sender] -= amount;
+    
+       	msg.sender.transfer(amount); 
+        
+   
+
+	}
+   
+ 
+    
+	function viewBalance() public view returns (uint) {
+
+        	return balances[msg.sender];
+
+	}
+    
+    
+
+	function destroyContract() public {
+
+        	require(owner == msg.sender);
+    
+        	selfdestruct(owner); 
+ 
+       
+    
+	}
+
+
+
+}

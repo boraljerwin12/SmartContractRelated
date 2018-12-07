@@ -1,0 +1,97 @@
+pragma solidity ^0.4.24;
+
+
+
+contract Atm {
+
+
+address owner;
+
+uint donate_amount = 2;
+
+string pass;
+    
+bool isStopped = false;
+    
+mapping(address => uint) balances;
+    
+constructor() payable public {
+        
+owner = msg.sender;
+    
+}
+
+ 
+   
+	modifier onlyOwner {
+        
+	require(msg.sender==owner, "Not Authorized");
+        
+	_;
+    
+	}
+    
+    
+
+	function Passcode(string _pass) onlyOwner public {
+       
+		pass = _pass;
+    
+	}
+
+    
+    
+	function deposit() onlyOwner public payable {
+        
+		require(isStopped==false);
+        
+		balances[msg.sender] = msg.value;
+    
+	}
+
+    
+    
+	function balance() onlyOwner public view returns (uint) {
+		require(isStopped==false);
+        
+		return balances[msg.sender];
+    
+	}
+    
+    
+
+	function withdraw(uint amount) onlyOwner public {
+        
+		require(balances[msg.sender] >= amount && isStopped==false);
+        
+		balances[msg.sender] -= amount;
+        
+		msg.sender.transfer(amount);
+    
+	}
+    
+    
+		
+	function verifyPasscode(string _passc) public view returns(bool) {
+        
+		if (bytes(pass).length == bytes(_passc).length) {
+            
+		return keccak256(abi.encodePacked(pass)) == keccak256(abi.encodePacked(_passc));
+        
+		}
+ 
+        
+		else 
+
+		{ 
+            
+
+		return false;
+        
+		}
+    
+	}
+
+    
+
+}

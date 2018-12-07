@@ -1,0 +1,105 @@
+pragma solidity ^0.4.24;
+
+
+
+contract Atm{
+    
+   
+
+	// Used is Access Restriction for restriction to access to certain parts
+    
+	address owner;
+
+   
+ 
+  
+	// Emergency Stop security pattern for disabling contract functionalities
+    
+	bool isStopped = false;
+   
+ 
+    
+	// Used is Checks Effects Interactions for reducing risk of re-entrancy attacks
+    
+	mapping(address => uint) balances;
+  
+ 
+    
+	// Used is Access Restriction for restriction to access to certain parts
+    
+	constructor() payable public {
+        
+		owner = msg.sender;
+    
+	}
+
+
+	// Used is Access Restriction for restriction to access to certain parts
+    
+	modifier onlyOwner {
+        
+		require(msg.sender==owner, "Not Authorized");
+        
+		_;
+   
+	}
+    
+    
+
+	// Used is Checks Effects Interactions for reducing risk of re-entrancy attacks
+    
+	function deposit() onlyOwner public payable {
+        
+		require(isStopped==false);
+        
+		balances[msg.sender] = msg.value;
+    
+	}
+    
+    
+
+	function balance() onlyOwner public view returns (uint) {
+        
+		require(isStopped==false);
+        
+		return balances[msg.sender];
+    
+	}
+
+
+	/*
+ 		Checks Effects Interactions (Reduce risk of re-entrancy attacks)
+		Guard Check (Ensures contract behaviour and its inputs as expected )
+ 		Pull Over Push (Shift the risk associated with transferring ether)
+ 		Secure Ether Transfer (Securely transfer ether) 
+	*/
+    
+	function withdraw(uint amount) onlyOwner public {
+        
+		require(balances[msg.sender] >= amount && isStopped==false);
+        
+		balances[msg.sender] -= amount;
+        
+		msg.sender.transfer(amount);
+    
+	}
+
+	// Emergency Stop security pattern for disabling contract functionalities
+    
+	function stopContract() onlyOwner public {
+        
+		isStopped = true;
+    
+	}
+
+    
+    
+	// Emergency Stop security pattern for disabling contract functionalities
+    
+	function resumeContract()  onlyOwner public {
+        
+		isStopped = false;
+    
+	}
+
+}

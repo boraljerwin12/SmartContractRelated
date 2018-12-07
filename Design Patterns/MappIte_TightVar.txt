@@ -1,0 +1,72 @@
+pragma solidity ^0.4.24;
+
+
+
+contract Login {
+
+   
+
+	mapping(string => address) elements;
+   
+	mapping(uint => bool) present;
+   
+	string[] keys;
+
+   
+	bytes3 boy = "Man";
+   
+	bytes5 girl = "Woman";
+
+
+   
+
+function signMe(string _name, string _gender, address _addr) {
+       
+	require(keccak256(boy) == keccak256(_gender) || keccak256(girl) == keccak256(_gender));
+       
+	if (elements[_name] == address(0)) {
+
+       
+	keys.push(_name);
+       
+	}
+
+   
+	elements[_name] = _addr;
+   
+}
+
+
+   
+function logMe(string _name, uint _index) public{
+       
+	require(keccak256(keys[_index]) == keccak256(_name));
+       
+	present[_index] = true;
+
+   
+	}
+
+
+   
+function getLength() view returns (uint) {
+       
+	return keys.length;
+   
+	}
+
+   
+
+function getElementAtIndex(uint _index) view returns (address,bool) {
+       
+	return (elements[keys[_index]],present[_index]);
+
+
+   
+	}
+
+
+
+
+   
+}
